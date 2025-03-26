@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="./banker.css">
+  <title>Banker's Algorithm</title>
+</head>
+<body>
+  <div class="container mt-3">
+    <a href="./index.html" class="btn btn-secondary">Back to Homepage</a>
+  </div>
+  <div class="container">
+    <ul class="background">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="container pt-5">
+    <h2 class="text-center subheading">Banker's Algorithm</h2>
+  </div>
+
+  <!-- Instructions Section Starts -->
+  <div class="container pt-3">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">Instructions:</h4>
+      <p>1. Enter the total instances of each resource (A, B, C, D).</p>
+      <p>2. Fill in the Allocation matrix for each process (P1 to P5).</p>
+      <p>3. Fill in the Maximum matrix for each process (P1 to P5).</p>
+      <p>4. Click on "Run Algorithm" to see the process sequence and check for deadlocks.</p>
+      <p>5. Click on "Example" to load sample values and see how the algorithm works.</p>
+      <p>6. Click on "Reset Values" to clear all input fields and start over.</p>
+    </div>
+  </div>
+  <!-- Instructions Section Ends -->
+
+  <div class="container pt-3">
+    <div class="alert" id="messageBox" style="display:none;"></div>
+    <div class="row">
+      <!-- Total Instance Form Starts -->
+      <div class="col-md-3 col-sm-6 mb-3 text-center">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Resource A</span>
+          </div>
+          <input type="text" class="form-control" id="resourceA" required data-toggle="tooltip" title="Enter the total instances of Resource A" oninput="updateAvailableResources()">
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3 text-center">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Resource B</span>
+          </div>
+          <input type="text" class="form-control" id="resourceB" required data-toggle="tooltip" title="Enter the total instances of Resource B" oninput="updateAvailableResources()">
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3 text-center">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Resource C</span>
+          </div>
+          <input type="text" class="form-control" id="resourceC" required data-toggle="tooltip" title="Enter the total instances of Resource C" oninput="updateAvailableResources()">
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3 text-center">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Resource D</span>
+          </div>
+          <input type="text" class="form-control" id="resourceD" required data-toggle="tooltip" title="Enter the total instances of Resource D" oninput="updateAvailableResources()">
+        </div>
+      </div>
+      <!-- Total Instance Form Ends -->
+    </div>
+  </div>
+
+  <div class="container pt-3">
+    <div class="row">
+      <!-- Allocation Form Starts -->
+      <div class="col-md-6 mb-3">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th colspan="5">Allocation</th>
+            </tr>
+            <tr>
+              <th>Process</th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P1</td>
+              <td><input class="form-control" id="a11" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource A for P1" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a12" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource B for P1" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a13" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource C for P1" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a14" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource D for P1" oninput="find_need(); updateAvailableResources()"></td>
+            </tr>
+            <tr>
+              <td>P2</td>
+              <td><input class="form-control" id="a21" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource A for P2" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a22" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource B for P2" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a23" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource C for P2" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a24" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource D for P2" oninput="find_need(); updateAvailableResources()"></td>
+            </tr>
+            <tr>
+              <td>P3</td>
+              <td><input class="form-control" id="a31" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource A for P3" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a32" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource B for P3" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a33" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource C for P3" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a34" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource D for P3" oninput="find_need(); updateAvailableResources()"></td>
+            </tr>
+            <tr>
+              <td>P4</td>
+              <td><input class="form-control" id="a41" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource A for P4" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a42" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource B for P4" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a43" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource C for P4" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a44" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource D for P4" oninput="find_need(); updateAvailableResources()"></td>
+            </tr>
+            <tr>
+              <td>P5</td>
+              <td><input class="form-control" id="a51" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource A for P5" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a52" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource B for P5" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a53" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource C for P5" oninput="find_need(); updateAvailableResources()"></td>
+              <td><input class="form-control" id="a54" size="2" maxlength="2" data-toggle="tooltip" title="Enter the allocated instances of Resource D for P5" oninput="find_need(); updateAvailableResources()"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Allocation Form Ends -->
+
+      <!-- Max Form Starts -->
+      <div class="col-md-6 mb-3">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th colspan="5">Maximum</th>
+            </tr>
+            <tr>
+              <th>Process</th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P1</td>
+              <td><input class="form-control" id="m11" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource A for P1" oninput="find_need()"></td>
+              <td><input class="form-control" id="m12" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource B for P1" oninput="find_need()"></td>
+              <td><input class="form-control" id="m13" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource C for P1" oninput="find_need()"></td>
+              <td><input class="form-control" id="m14" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource D for P1" oninput="find_need()"></td>
+            </tr>
+            <tr>
+              <td>P2</td>
+              <td><input class="form-control" id="m21" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource A for P2" oninput="find_need()"></td>
+              <td><input class="form-control" id="m22" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource B for P2" oninput="find_need()"></td>
+              <td><input class="form-control" id="m23" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource C for P2" oninput="find_need()"></td>
+              <td><input class="form-control" id="m24" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource D for P2" oninput="find_need()"></td>
+            </tr>
+            <tr>
+              <td>P3</td>
+              <td><input class="form-control" id="m31" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource A for P3" oninput="find_need()"></td>
+              <td><input class="form-control" id="m32" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource B for P3" oninput="find_need()"></td>
+              <td><input class="form-control" id="m33" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource C for P3" oninput="find_need()"></td>
+              <td><input class="form-control" id="m34" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource D for P3" oninput="find_need()"></td>
+            </tr>
+            <tr>
+              <td>P4</td>
+              <td><input class="form-control" id="m41" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource A for P4" oninput="find_need()"></td>
+              <td><input class="form-control" id="m42" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource B for P4" oninput="find_need()"></td>
+              <td><input class="form-control" id="m43" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource C for P4" oninput="find_need()"></td>
+              <td><input class="form-control" id="m44" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource D for P4" oninput="find_need()"></td>
+            </tr>
+            <tr>
+              <td>P5</td>
+              <td><input class="form-control" id="m51" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource A for P5" oninput="find_need()"></td>
+              <td><input class="form-control" id="m52" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource B for P5" oninput="find_need()"></td>
+              <td><input class="form-control" id="m53" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource C for P5" oninput="find_need()"></td>
+              <td><input class="form-control" id="m54" size="2" maxlength="2" data-toggle="tooltip" title="Enter the maximum instances of Resource D for P5" oninput="find_need()"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Max Form Ends -->
+    </div>
+
+    <div class="row">
+      <!-- Need Form Starts -->
+      <div class="col-md-6 mb-3">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th colspan="5">Need</th>
+            </tr>
+            <tr>
+              <th>Process</th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P1</td>
+              <td><input class="form-control" id="n11" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n12" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n13" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n14" size="2" maxlength="2" disabled></td>
+            </tr>
+            <tr>
+              <td>P2</td>
+              <td><input class="form-control" id="n21" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n22" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n23" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n24" size="2" maxlength="2" disabled></td>
+            </tr>
+            <tr>
+              <td>P3</td>
+              <td><input class="form-control" id="n31" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n32" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n33" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n34" size="2" maxlength="2" disabled></td>
+            </tr>
+            <tr>
+              <td>P4</td>
+              <td><input class="form-control" id="n41" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n42" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n43" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n44" size="2" maxlength="2" disabled></td>
+            </tr>
+            <tr>
+              <td>P5</td>
+              <td><input class="form-control" id="n51" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n52" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n53" size="2" maxlength="2" disabled></td>
+              <td><input class="form-control" id="n54" size="2" maxlength="2" disabled></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Need Form Ends -->
+
+      <!-- Available Form Starts -->
+      <div class="col-md-6 mb-3">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th colspan="5">Available</th>
+            </tr>
+            <tr>
+              <th>Resource</th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td><input class="form-control" id="av11" size="2" maxlength="2" data-toggle="tooltip" title="Enter the available instances of Resource A" disabled></td>
+              <td><input class="form-control" id="av12" size="2" maxlength="2" data-toggle="tooltip" title="Enter the available instances of Resource B" disabled></td>
+              <td><input class="form-control" id="av13" size="2" maxlength="2" data-toggle="tooltip" title="Enter the available instances of Resource C" disabled></td>
+              <td><input class="form-control" id="av14" size="2" maxlength="2" data-toggle="tooltip" title="Enter the available instances of Resource D" disabled></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Available Form Ends -->
+    </div>
+
+    <!-- Algo Buttons Starts -->
+    <div class="row mb-3 text-center">
+      <div class="col-4">
+        <a href="#" class="btn btn-secondary" onclick="example()">Example</a>
+      </div>
+      <div class="col-4">
+        <a href="#" class="btn btn-secondary" onclick="run_algo_wrapper()">Run Algorithm</a>
+      </div>
+      <div class="col-4">
+        <a href="#" class="btn btn-secondary" onclick="reset()">Reset Values</a>
+      </div>
+    </div>
+    <!-- Algo Buttons Ends -->
+
+    <!-- Process Sequence Starts -->
+    <div class="row mb-3 text-center">
+      <div class="col-12">
+        <h4 class="text">Process Sequence:</h4>
+        <div id="process-sequence" class="d-inline-block">
+          <!-- Dynamic process sequence will be appended here -->
+        </div>
+      </div>
+    </div>
+    <!-- Process Sequence Ends -->
+
+    <!-- Log Section Starts -->
+    <div class="row mb-3 text-center">
+      <div class="col-12">
+        <h4 class="text">Log:</h4>
+        <div id="process-log" class="log-container">
+          <!-- Log messages will be appended here -->
+        </div>
+      </div>
+    </div>
+    <!-- Log Section Ends -->
+
+    <!-- Deadlock Modal -->
+    <div class="modal fade" id="deadlockModal" tabindex="-1" aria-labelledby="deadlockModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deadlockModalLabel">Deadlock Detected</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>A deadlock has been detected in the system. This occurs when the processes are in a state where they are waiting for resources held by each other, causing a circular wait condition.</p>
+            <p id="deadlockProcesses"></p>
+            <p><strong>Why it happened:</strong></p>
+            <ul>
+              <li>Processes are requesting more resources than what is available.</li>
+              <li>The current allocation of resources does not allow any process to proceed.</li>
+            </ul>
+            <p><strong>How to prevent:</strong></p>
+            <ul>
+              <li>Ensure that the sum of maximum resource requests does not exceed the total resources available.</li>
+              <li>Use resource allocation strategies that avoid circular waits.</li>
+              <li>Review and adjust the maximum resource claims for each process.</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+  <script src="./banker.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.btn-secondary');
+      buttons.forEach(button => {
+        button.addEventListener('mouseover', () => {
+          gsap.to(button, { duration: 0.5, scale: 1.1 });
+        });
+        button.addEventListener('mouseout', () => {
+          gsap.to(button, { duration: 0.5, scale: 1 });
+        });
+      });
+
+      // Example using GSAP for background animation
+      gsap.to('.background li', {
+        duration: 25,
+        y: -1000,
+        rotation: 720,
+        opacity: 0,
+        stagger: 0.1,
+        repeat: -1,
+        ease: "none"
+      });
+
+      // Initialize tooltips
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+</html>
